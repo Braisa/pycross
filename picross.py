@@ -49,12 +49,7 @@ def get_hint(paint):
         hint = "0" + separator
     return hint[:len(hint) - len(separator)]
 
-def print_board(board):
-    for i in range(grid_side):
-        print(f"Columna {i+1}: {get_paint(board[:, i])}")
-        print(f"Fila {i+1}: {get_paint(board[i, :])}")
-
-def draw_board(board, target):
+def draw_board(board = game_board, target = target_board):
     plt.figure(dpi = grid_side * 10)
     
     # Obtemos as pistas de cada fila e columna
@@ -74,7 +69,7 @@ def draw_board(board, target):
     plt.imshow(image)
     plt.show()
 
-def check_victory(board, target):
+def check_victory(board = game_board, target = target_board):
     # Need to change UNOUN, CROSS and ERROR to BLANK
     compare = board.copy()
     compare[np.where(board == UNOUN)] = BLANK
@@ -87,47 +82,47 @@ def check_victory(board, target):
     else:
         return False
 
-def get_input():
+def get_input(board = game_board, target = target_board):
     i = input("? ")
     i = i.lower()
     itype = i[0]
     ipos = np.int_(i[1:].split(","))
     pos = (ipos[0], ipos[1])
-    if game_board[pos] == PAINT:
+    if board[pos] == PAINT:
         print("Pix already painted.")
         return "invalid"
     if itype == "p":
-        if not game_board[pos] == CROSS:
-            if target_board[pos] == PAINT:
+        if not board[pos] == CROSS:
+            if target[pos] == PAINT:
                 # Correct
-                game_board[pos] = PAINT
+                board[pos] = PAINT
             else:
                 # Incorrect
-                game_board[pos] = ERROR
+                board[pos] = ERROR
         else:
             print("Remove cross first.")
             return "invalid"
     elif itype == "c":
-        if not game_board[pos] == CROSS:
-            game_board[pos] = CROSS
+        if not board[pos] == CROSS:
+            board[pos] = CROSS
         else:
             print("Already crossed.")
             return "invalid"
     elif itype == "r":
-        if not game_board[pos] == UNOUN:
-            game_board[pos] = UNOUN
+        if not board[pos] == UNOUN:
+            board[pos] = UNOUN
         else:
             print("Nothing to remove.")
             return "invalid"
     # elif ...
 
 
-draw_board(game_board, target_board)
+draw_board()
 while True:
     while get_input() == "invalid":
         pass
-    draw_board(game_board, target_board)
-    if check_victory(game_board, target_board):
+    draw_board()
+    if check_victory():
         print("Completed!")
         sys.exit()
 
