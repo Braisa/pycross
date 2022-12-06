@@ -31,7 +31,7 @@ inputs = {
     "remove_cross" : "r"
 }
 
-grid_side = 8
+grid_side = 10
 max_strokes = int(np.ceil(grid_side/2))
 grid_shape = (grid_side, grid_side)
 
@@ -164,7 +164,7 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                 print("Can't draw stroke, there is a cross.")
                 return "invalid"
             else:
-                for i in range(ini, fin+1):
+                for i in range(stroke.size):
                     if stroke_target[i] == PAINT:
                         # Correct
                         stroke[i] = PAINT
@@ -174,7 +174,6 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                 
     except (IndexError, ValueError):
         return "invalid"
-
 
 print_instructions()
 draw_board()
