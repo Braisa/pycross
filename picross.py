@@ -31,7 +31,7 @@ inputs = {
     "remove_cross" : "r"
 }
 
-grid_side = 5
+grid_side = 10
 max_strokes = int(np.ceil(grid_side/2))
 grid_shape = (grid_side, grid_side)
 
@@ -117,8 +117,14 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
     i = input("Input? ")
     i = i.lower()
     itype = i[0]
-    ipos = np.int_(i[1:].split(","))
-    pos = (ipos[0]-1, ipos[1]-1)
+    try:
+        ipos = np.int_(i[1:].split(","))
+    except ValueError:
+        return "invalid"
+    try:
+        pos = (ipos[0]-1, ipos[1]-1)
+    except IndexError:
+        return "invalid"
     if board[pos] == PAINT:
         print("Pix already painted.")
         return "invalid"
