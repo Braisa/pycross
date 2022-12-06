@@ -31,7 +31,7 @@ inputs = {
     "remove_cross" : "r"
 }
 
-grid_side = 10
+grid_side = 8
 max_strokes = int(np.ceil(grid_side/2))
 grid_shape = (grid_side, grid_side)
 
@@ -114,51 +114,48 @@ def print_instructions(input_map = inputs):
     print("\n")
 
 def get_input(board = game_board, target = target_board, input_map = inputs):
-    i = input("Input? ")
-    i = i.lower()
-    itype = i[0]
     try:
+        i = input("Input? ")
+        i = i.lower()
+        itype = i[0]
         ipos = np.int_(i[1:].split(","))
-    except ValueError:
-        return "invalid"
-    try:
         pos = (ipos[0]-1, ipos[1]-1)
-    except IndexError:
-        return "invalid"
-    if board[pos] == PAINT:
-        print("Pix already painted.")
-        return "invalid"
-    if itype == input_map["paint"]:
-        if not board[pos] == CROSS:
-            if target[pos] == PAINT:
-                # Correct
-                board[pos] = PAINT
+        if board[pos] == PAINT:
+            print("Pix already painted.")
+            return "invalid"
+        if itype == input_map["paint"]:
+            if not board[pos] == CROSS:
+                if target[pos] == PAINT:
+                    # Correct
+                    board[pos] = PAINT
+                else:
+                    # Incorrect
+                    board[pos] = ERROR
             else:
-                # Incorrect
-                board[pos] = ERROR
-        else:
-            print("Remove cross first.")
-            return "invalid"
-    elif itype == input_map["cross"]:
-        if not board[pos] == CROSS:
-            board[pos] = CROSS
-        else:
-            print("Already crossed.")
-            return "invalid"
-    elif itype == input_map["remove_cross"]:
-        if not board[pos] == UNOUN:
-            board[pos] = UNOUN
-        else:
-            print("Nothing to remove.")
-            return "invalid"
-    # elif ...
+                print("Remove cross first.")
+                return "invalid"
+        elif itype == input_map["cross"]:
+            if not board[pos] == CROSS:
+                board[pos] = CROSS
+            else:
+                print("Already crossed.")
+                return "invalid"
+        elif itype == input_map["remove_cross"]:
+            if not board[pos] == UNOUN:
+                board[pos] = UNOUN
+            else:
+                print("Nothing to remove.")
+                return "invalid"
+        # elif ...
+    except (IndexError, ValueError):
+        return "invalid"
 
 
 print_instructions()
 draw_board()
 while True:
     while get_input() == "invalid":
-        pass
+        print("Invalid input.")
     draw_board()
     if check_victory():
         print("Completed!")
