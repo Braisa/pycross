@@ -65,7 +65,7 @@ def get_hint(paint):
     return hint[:len(hint) - len(separator)]
 
 def draw_board(board = game_board, target = target_board):
-    plt.figure(dpi = grid_side * 10)
+    fig, ax = plt.subplots(dpi = max(grid_side, 100))
     
     # Obtemos as pistas de cada fila e columna
     rowsh, colsh = [], []
@@ -81,6 +81,7 @@ def draw_board(board = game_board, target = target_board):
     image[np.where(board == PAINT)] = colors[PAINT]
     image[np.where(board == CROSS)] = colors[CROSS]
     image[np.where(board == ERROR)] = colors[ERROR]
+    ax.xaxis.set_ticks_position("top")
     plt.imshow(image)
     plt.show()
 
