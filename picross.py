@@ -28,10 +28,31 @@ inputs = {
     "paint" : "p",
     "paint_stroke" : "s",
     "cross" : "c",
+    "cross_stroke" : "x",
     "remove_cross" : "r"
 }
 
-grid_side = 10
+def print_instructions(input_map = inputs):
+    print("In order to win, you need to paint all blocks.")
+    print("The numbers on each row and column indicate the amount of blocks there are.")
+    print("If there are multiple numbers, then there are multiple strokes.")
+    print("Strokes are separated from each other by at least one blank space.")
+    print("\n")
+    print("In order to make an input, you must type a key and a position.")
+    print("To paint a block, the key is", inputs["paint"])
+    print("To paint an entire stroke, the key is", inputs["paint_stroke"])
+    print("In this case, you have to indicate row or column with r or c respectively, its index and then the initial and final positions.")
+    print("To mark a cross, the key is", inputs["cross"])
+    print("To remove a cross, the key is", inputs["remove_cross"])
+    print("For example, if you want to paint the block at position (1,2), then you would input:")
+    print("Input? p1,2")
+    print("\n")
+
+def select_board(): # dataset
+    side = int(input("Select the side of the board: "))
+    return side
+
+grid_side = select_board()
 max_strokes = int(np.ceil(grid_side/2))
 grid_shape = (grid_side, grid_side)
 
@@ -76,13 +97,22 @@ def draw_board(board = game_board, target = target_board):
     ax.set_yticks(np.arange(grid_side))
     ax.set_yticklabels(np.array(rowsh))
     
+    ax.xaxis.set_ticks_position("top")
+    # Moves grid
+    ax.set_xticks(np.arange(grid_side) + .5, minor = True)
+    ax.tick_params(axis = "x", which = "minor", length = 0)
+    ax.grid(axis = "x", which = "minor")
+    ax.set_yticks(np.arange(grid_side) + .5, minor = True)
+    ax.tick_params(axis = "y", which = "minor", length = 0)
+    ax.grid(axis = "y", which = "minor")
+    
     image = np.zeros((grid_side, grid_side, 3))
     image[np.where(board == UNOUN)] = colors[UNOUN]
     image[np.where(board == BLANK)] = colors[BLANK]
     image[np.where(board == PAINT)] = colors[PAINT]
     image[np.where(board == CROSS)] = colors[CROSS]
     image[np.where(board == ERROR)] = colors[ERROR]
-    ax.xaxis.set_ticks_position("top")
+    
     plt.imshow(image)
     plt.show()
 
@@ -97,22 +127,6 @@ def check_victory(board = game_board, target = target_board):
         return True
     else:
         return False
-
-def print_instructions(input_map = inputs):
-    print("In order to win, you need to paint all blocks.")
-    print("The numbers on each row and column indicate the amount of blocks there are.")
-    print("If there are multiple numbers, then there are multiple strokes.")
-    print("Strokes are separated from each other by at least one blank space.")
-    print("\n")
-    print("In order to make an input, you must type a key and a position.")
-    print("To paint a block, the key is", inputs["paint"])
-    print("To paint an entire stroke, the key is", inputs["paint_stroke"])
-    print("In this case, you have to indicate row or column with r or c respectively, its index and then the initial and final positions.")
-    print("To mark a cross, the key is", inputs["cross"])
-    print("To remove a cross, the key is", inputs["remove_cross"])
-    print("For example, if you want to paint the block at position (1,2), then you would input:")
-    print("Input? p1,2")
-    print("\n")
 
 def get_input(board = game_board, target = target_board, input_map = inputs):
     try:
