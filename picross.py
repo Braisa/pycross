@@ -52,10 +52,9 @@ def get_paint(line):
     
     return paint[1, :] # Devolve só os bloques de cada stroke
 
-def get_hint(paint):
+def get_hint(paint, separator):
     # Crea a pista que aparecerá na fila ou columna a partir do paint
     hint = ""
-    separator = " | "
     for stroke in paint:
         if not stroke == 0:
             hint += str(stroke)
@@ -70,10 +69,12 @@ def draw_board(board = game_board, target = target_board):
     # Obtemos as pistas de cada fila e columna
     rowsh, colsh = [], []
     for i in range(grid_side):
-        rowsh.append(get_hint(get_paint(target[i, :])))
-        colsh.append(get_hint(get_paint(target[:, i])))
-    plt.xticks(np.arange(grid_side), np.array(colsh))
-    plt.yticks(np.arange(grid_side), np.array(rowsh))
+        rowsh.append(get_hint(get_paint(target[i, :]), " | "))
+        colsh.append(get_hint(get_paint(target[:, i]), "\n"))
+    ax.set_xticks(np.arange(grid_side))
+    ax.set_xticklabels(np.array(colsh), rotation = 0)
+    ax.set_yticks(np.arange(grid_side))
+    ax.set_yticklabels(np.array(rowsh))
     
     image = np.zeros((grid_side, grid_side, 3))
     image[np.where(board == UNOUN)] = colors[UNOUN]
