@@ -105,6 +105,10 @@ def draw_board(board = game_board, target = target_board):
     ax.set_yticks(np.arange(grid_side) + .5, minor = True)
     ax.tick_params(axis = "y", which = "minor", length = 0)
     ax.grid(axis = "y", which = "minor")
+    # Adds wider gridlines
+    for j in range(grid_side//5):
+        ax.axhline(j*5 + 4.5, color = "gray", linewidth = 1.5)
+        ax.axvline(j*5 + 4.5, color = "gray", linewidth = 1.5)
     
     image = np.zeros((grid_side, grid_side, 3))
     image[np.where(board == UNOUN)] = colors[UNOUN]
