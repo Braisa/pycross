@@ -136,7 +136,7 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
     try:
         i = input("Input? ").lower()
         itype = i[0]
-        if not itype == "s":
+        if not (itype == input_map["paint_stroke"] or itype == input_map["cross_stroke"]):
             ipos = np.int_(i[1:].split(","))
             pos = (ipos[0]-1, ipos[1]-1)
             if board[pos] == PAINT:
@@ -167,7 +167,7 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                     return "invalid"
             # elif ...
         else:
-            # Paint stroke
+            # Get stroke and target info
             ipos = np.int_(i[2:].split(","))
             idx, ini, fin = ipos[0]-1, ipos[1]-1, ipos[2]-1
             if i[1] == "r": # Row
@@ -177,19 +177,25 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                 stroke = board[ini:fin+1, idx]
                 stroke_target = target[ini:fin+1, idx]
             
-            if np.any(stroke == CROSS) \
-            or np.any(stroke == ERROR):
-                print("Can't draw stroke, there is a cross.")
-                return "invalid"
+            if itype == input_map["paint_stroke"]:
+                # Paint stroke
+                if np.any(stroke == CROSS) or np.any(stroke == ERROR):
+                    print("Can't draw stroke, there is a cross.")
+                    return "invalid"
+                else:
+                    for i in range(stroke.size):
+                        if stroke_target[i] == PAINT:
+                            # Correct
+                            stroke[i] = PAINT
+                        else:
+                            # Incorrect
+                            stroke[i] = ERROR
             else:
+                # Cross stroke
                 for i in range(stroke.size):
-                    if stroke_target[i] == PAINT:
-                        # Correct
-                        stroke[i] = PAINT
-                    else:
-                        # Incorrect
-                        stroke[i] = ERROR
-                
+                    if not (stroke_target[i] == PAINT or stroke_target[i] == ERROR):
+                        stroke[i] = CROSS
+                        
     except (IndexError, ValueError):
         return "invalid"
 
