@@ -120,6 +120,30 @@ def draw_board(board = game_board, target = target_board):
     plt.imshow(image)
     plt.show()
 
+
+def cross_line(roc : str, idx : int, board = game_board):
+    if roc == "r" or roc == "row":
+        pos = np.where(board[idx, :] == UNOUN)
+        board[idx, pos] = CROSS
+    elif roc == "c" or roc == "col" or roc == "column":
+        pos = np.where(board[:, idx] == UNOUN)
+        board[pos, idx] = CROSS
+
+def check_completed(pos : tuple, board = game_board, target = target_board):
+    # Need to change UNOUN, CROSS and ERROR to BLANK
+    compare = board.copy()
+    compare[np.where(board == UNOUN)] = BLANK
+    compare[np.where(board == CROSS)] = BLANK
+    compare[np.where(board == ERROR)] = BLANK
+    
+    # Checks row
+    if np.all(compare[pos[0], :] == target[pos[0], :]):
+        cross_line("r", pos[0])
+    
+    # Checks column
+    if np.all(compare[:, pos[1]] == target[:, pos[1]]):
+        cross_line("c", pos[1])
+
 def check_victory(board = game_board, target = target_board):
     # Need to change UNOUN, CROSS and ERROR to BLANK
     compare = board.copy()
@@ -147,6 +171,7 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                     if target[pos] == PAINT:
                         # Correct
                         board[pos] = PAINT
+                        return pos
                     else:
                         # Incorrect
                         board[pos] = ERROR
@@ -179,12 +204,15 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
             else:
                 # Get partial stroke
                 ini, fin = ipos[1]-1, ipos[2]-1
+            
             if i[1] == "r": # Row
                 stroke = board[idx, ini:fin+1]
                 stroke_target = target[idx, ini:fin+1]
+                msg_pos = (idx, fin)
             elif i[1] == "c": # Column
                 stroke = board[ini:fin+1, idx]
                 stroke_target = target[ini:fin+1, idx]
+                msg_pos = (fin, idx)
             
             if itype == input_map["paint_stroke"]:
                 # Paint stroke
@@ -199,6 +227,8 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
                         else:
                             # Incorrect
                             stroke[i] = ERROR
+                        # Returns position at the end of the stroke
+                        return msg_pos
             else:
                 # Cross stroke
                 for i in range(stroke.size):
@@ -211,8 +241,15 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
 print_instructions()
 draw_board()
 while True:
-    while get_input() == "invalid":
-        print("Invalid input.")
+    while True:
+        msg = get_input()
+        if msg == "invalid":
+            print("Invalid input.")
+        elif type(msg) == tuple:
+            check_completed(msg)
+            break
+        else:
+            break
     draw_board()
     if check_victory():
         print("Completed!")
