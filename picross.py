@@ -169,7 +169,16 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
         else:
             # Get stroke and target info
             ipos = np.int_(i[2:].split(","))
-            idx, ini, fin = ipos[0]-1, ipos[1]-1, ipos[2]-1
+            idx = ipos[0]-1
+            if not ipos.size > 1:
+                # Get entire stroke
+                ini, fin = 0, grid_side
+            elif not ipos.size > 2:
+                # Get entire stroke from offset
+                ini, fin = ipos[1]-1, grid_side
+            else:
+                # Get partial stroke
+                ini, fin = ipos[1]-1, ipos[2]-1
             if i[1] == "r": # Row
                 stroke = board[idx, ini:fin+1]
                 stroke_target = target[idx, ini:fin+1]
@@ -193,7 +202,7 @@ def get_input(board = game_board, target = target_board, input_map = inputs):
             else:
                 # Cross stroke
                 for i in range(stroke.size):
-                    if not (stroke_target[i] == PAINT or stroke_target[i] == ERROR):
+                    if not (stroke[i] == PAINT or stroke[i] == ERROR):
                         stroke[i] = CROSS
                         
     except (IndexError, ValueError):
