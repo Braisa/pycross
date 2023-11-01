@@ -6,6 +6,7 @@ Created on Tue Oct 31 22:21:33 2023
 """
 
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import sys, os
 import tkinter as tk
@@ -133,11 +134,9 @@ def check_victory(board = game_board, target = target_board):
     compare[np.where(board == CROSS)] = BLANK
     compare[np.where(board == ERROR)] = BLANK
     
-    if np.all(compare == target):
-        return True
-    else:
-        return False
+    return np.all(compare == target)
 
+mpl.rcParams["toolbar"] = "None"
 fig, ax = plt.subplots(dpi = max(grid_side, 100))
 draw_board(fig, ax)
 
@@ -163,8 +162,12 @@ def on_click(event, board = game_board, target = target_board):
                     board[pos] = CROSS
                 else:
                     board[pos] = UNOUN
+    # Comproba se a liña ou columna foi completada para recheala
+    check_completed(pos, board = board)
     ax.clear()
     draw_board(fig, ax, board = board)
+    if check_victory(board = board):
+        print("Finished!")
 
 # cid : connection id
 cid = fig.canvas.mpl_connect("button_press_event", on_click)
