@@ -29,13 +29,7 @@ inputs = {
 path = os.path.dirname(__file__) + "\\"
 
 def select_board(): # dataset
-    print("If you want to play a random board, type rn, where n is the board side.")
-    print("If you want to play a specific board, type its file name.")
-    board_name = input("Input: ")
-    # Check if random
-    if board_name[0] == "r" and board_name[1] is int:
-        
-    
+    side = int(input("Select the side of the board: "))
     return side
 
 grid_side = select_board()
