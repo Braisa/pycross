@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import sys, os
+import PIL.Image as img
 
 UNOUN = 0
 BLANK = 1
@@ -32,15 +33,36 @@ inputs = {
 
 path = os.path.dirname(__file__) + "\\"
 
-def select_board(): # dataset
+def select_random():
+    random = "y" == input("Random board (y/n)? ")
+    return random
+
+def select_board_size(): # dataset
     side = int(input("Select the side of the board: "))
     return side
 
-grid_side = select_board()
-max_strokes = int(np.ceil(grid_side/2))
-grid_shape = (grid_side, grid_side)
-
-target_board = np.random.randint(BLANK, PAINT+1, size = grid_shape)
+# Board selection
+if select_random():
+    grid_side = select_board_size()
+    max_strokes = int(np.ceil(grid_side/2))
+    grid_shape = (grid_side, grid_side)
+    target_board = np.random.randint(BLANK, PAINT+1, size = grid_shape)
+else:
+    while True:
+        board_name = input("Input board name: ")
+        try:
+            image = np.asarray(img.open(board_name + ".png").convert("1"))
+            break
+        except IOError:
+            input("File not found.")
+            print(image)
+    target_board = np.zeros(image.shape)
+    target_board[np.where(image == False)] = PAINT
+    target_board[np.where(image == True)] = BLANK
+    print(target_board)
+    grid_side = int(np.sqrt(target_board.size))
+    max_strokes = int(np.ceil(grid_side/2))
+    grid_shape = (grid_side, grid_side)
 game_board = np.zeros_like(target_board)
 
 def get_paint(line):

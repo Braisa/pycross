@@ -29,7 +29,13 @@ inputs = {
 path = os.path.dirname(__file__) + "\\"
 
 def select_board(): # dataset
-    side = int(input("Select the side of the board: "))
+    print("If you want to play a random board, type rn, where n is the board side.")
+    print("If you want to play a specific board, type its file name.")
+    board_name = input("Input: ")
+    # Check if random
+    if board_name[0] == "r" and board_name[1] is int:
+        
+    
     return side
 
 grid_side = select_board()
@@ -38,7 +44,7 @@ grid_shape = (grid_side, grid_side)
 
 canvas = np.ones(grid_shape)
 
-def draw_board(fig, ax):
+def draw_board(fig, ax, side = grid_side):
     # Moves grid
     ax.set_xticks(np.arange(grid_side) + .5, minor = True)
     ax.tick_params(axis = "x", which = "minor", length = 0)
