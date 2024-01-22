@@ -9,8 +9,6 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import sys, os
-import tkinter as tk
-from tkinter import ttk
 
 UNOUN = 0
 BLANK = 1
