@@ -190,4 +190,5 @@ def on_click(event, board = game_board, target = target_board):
         print("Finished!")
 
 # cid : connection id
-cid = fig.canvas.mpl_connect("motion_notify_event", on_click)
+cid1 = fig.canvas.mpl_connect("button_press_event", on_click)
+cid2 = fig.canvas.mpl_connect("motion_notify_event", on_click)
