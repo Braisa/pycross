@@ -137,7 +137,7 @@ def check_victory(board = game_board, target = target_board):
     return np.all(compare == target)
 
 mpl.rcParams["toolbar"] = "None"
-fig, ax = plt.subplots(dpi = max(grid_side, 100))
+fig, ax = plt.subplots(dpi = max(grid_side, 100), layout = "constrained")
 draw_board(fig, ax)
 
 def mouse_to_board(x, y):

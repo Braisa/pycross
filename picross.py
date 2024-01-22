@@ -246,7 +246,7 @@ while True:
         if msg == "invalid":
             print("Invalid input.")
         elif type(msg) == tuple:
-            check_completed(msg)
+            #check_completed(msg)
             break
         else:
             break
